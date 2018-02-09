@@ -1,9 +1,13 @@
+from __future__ import print_function
+
 import sys
 import re
 import collections
 
 from . import g, terminalsize
 
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
 
 Command = collections.namedtuple('Command', 'regex function')
 InitCommand = collections.namedtuple('InitCommand', 'function')
@@ -88,7 +92,10 @@ class PyMenu(object):
 
         while True:
             try:
-                userinput = input(g.prompt).strip()
+                if PY2:
+                    userinput = raw_input(g.prompt).strip()
+                elif PY3:
+                    userinput = input(g.prompt).strip()
             except (KeyboardInterrupt, EOFError):
                 sys.exit(0)
             for c in g.commands:
